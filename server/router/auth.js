@@ -13,7 +13,7 @@ router.post("/addProduct", async (req, res) => {
     return res.status(442).json({ error: "Check all required feild" });
   }
   try {
-    const productExist = await Product.find({});
+    const productExist = await Product.findOne({ description: description });
     if (productExist) {
       return res.status(442).json({ error: "Product already exist" });
     }
@@ -222,6 +222,7 @@ router.get("/deleteOrder:_id", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+  router.apply("/abc");
 });
 
 module.exports = router;
