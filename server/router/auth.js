@@ -9,11 +9,11 @@ const authenticate = require("../middleware/authentication");
 // add Product
 router.post("/addProduct", async (req, res) => {
   const { id, category, src, title, description, Price, discount } = req.body;
-  if (!id || !title || !Price || !description) {
+  if (!id || !title || !Price || !description || !category) {
     return res.status(442).json({ error: "Check all required feild" });
   }
   try {
-    const productExist = await Product.findOne({ description: description });
+    const productExist = await Product.find({});
     if (productExist) {
       return res.status(442).json({ error: "Product already exist" });
     }
@@ -28,7 +28,7 @@ router.post("/addProduct", async (req, res) => {
     });
     let x = await product.save();
 
-    res.status(201).json({ message: "Product Added Successfulll" });
+    return res.status(201).json({ message: "Product Added Successfulll" });
   } catch (err) {
     console.log(err);
   }
@@ -56,7 +56,7 @@ router.post("/registation", async (req, res) => {
     });
     let x = await user.save();
     // console.log(x);
-    res.status(201).json({ message: "registation successfully" });
+    return res.status(201).json({ message: "registation successfully" });
   } catch (err) {
     console.log(err);
   }
@@ -153,11 +153,75 @@ router.get("/user", async (req, res) => {
   let data = await User.find({});
   return res.status(200).json({ success: true, message: data });
 });
+// update user
+router.get("/updateUser:_id", async (req, res) => {
+  try {
+    let _id = req.params._id;
+    let result = await Order.updateOne({ _id: _id });
+    return res
+      .status(200)
+      .json({ success: true, message: "Profile update successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//product
+router.get("/product", async (req, res) => {
+  let data = await Product.find({});
+  return res.status(200).json({ success: true, message: data });
+});
 
 //sofalist
 router.get("/sofa", async (req, res) => {
   let data = await Product.find({ category: "Sofa" });
   return res.status(200).json({ success: true, message: data });
+});
+
+//doorList
+router.get("/door", async (req, res) => {
+  let data = await Product.find({ category: "Door" });
+  return res.status(200).json({ success: true, message: data });
+});
+//doorList
+router.get("/door", async (req, res) => {
+  let data = await Product.find({ category: "Door" });
+  return res.status(200).json({ success: true, message: data });
+});
+//user delete
+router.get("/deleteUser:_id", async (req, res) => {
+  try {
+    let _id = req.params._id;
+    let result = await User.deleteOne({ _id: _id });
+    console.log(result);
+    return res.status(200).json({ success: true, message: "User deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+//product delete
+router.get("/deleteProduct:_id", async (req, res) => {
+  try {
+    let _id = req.params._id;
+    let result = await Product.deleteOne({ _id: _id });
+    console.log(result);
+    return res.status(200).json({ success: true, message: "Product deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+//order delete
+router.get("/deleteOrder:_id", async (req, res) => {
+  try {
+    let _id = req.params._id;
+    let result = await Order.deleteOne({ _id: _id });
+    console.log(result);
+    return res
+      .status(200)
+      .json({ success: true, message: "Order Delevered successfully" });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;
